@@ -8,11 +8,14 @@ import { Router } from 'express';
 const transactionsRouter = Router();
 
 transactionsRouter.get('/', async (request, response) => {
-  // TODO
+
 });
 
 transactionsRouter.post('/', async (request, response) => {
-  // TODO
+  const { title, value, type, category } = request.body
+
+  return response.json(title);
+
 });
 
 transactionsRouter.delete('/:id', async (request, response) => {
