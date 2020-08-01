@@ -58,7 +58,6 @@ export default class CreateTransaction1596075166218 implements MigrationInterfac
         onUpdate: 'CASCADE',
     }) )
 
-
       }
 
 
