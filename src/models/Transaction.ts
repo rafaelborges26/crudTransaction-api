@@ -14,7 +14,7 @@ class Transaction {
   @Column()
   type: 'income' | 'outcome';
 
-  @Column()
+  @Column('decimal')
   value: number;
 
   @Column()
@@ -25,10 +25,10 @@ class Transaction {
   @JoinColumn({name : 'category_id'})
   category : Category
 
-  @Column()
+  @CreateDateColumn()
   created_at: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updated_at: Date;
 }
 

@@ -1,6 +1,6 @@
 import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn} from 'typeorm'
 
-@Entity('categorys')
+@Entity('categories')
 class Category {
 
   @PrimaryGeneratedColumn('uuid')
@@ -9,10 +9,10 @@ class Category {
   @Column()
   title: string;
 
-  @Column()
+  @CreateDateColumn()
   created_at: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updated_at: Date;
 }
 

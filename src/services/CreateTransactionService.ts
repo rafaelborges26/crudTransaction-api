@@ -1,21 +1,41 @@
 // import AppError from '../errors/AppError';
 
-import TransactionsRepository from '../models/Transaction';
 import Category from '../models/Category';
 import { getCustomRepository, FindOperator, FindOperatorType, getRepository } from 'typeorm'
+
+import TransactionsRepository from '../repositories/TransactionsRepository'
+
 import Transaction from '../models/Transaction';
 
 interface Request {
   title: string
-  value: number
   type: "income" | "outcome"
+  value: number
   category: string
 }
 
 class CreateTransactionService {
   public async execute({ title, value, type, category }:Request): Promise<Transaction> {
 
-    const transactionRepository = getRepository(TransactionsRepository)
+    const transactionRepository = getCustomRepository(TransactionsRepository)
+
+
+    //if(type !== 'outcome' && type !== 'income') {
+    //  throw new Error('The type should be income or outcome')
+    //}
+
+
+    const transaction = transactionRepository.create({
+      title,
+      value,
+      type,
+    })
+
+    await transactionRepository.save(transaction)
+
+    return transaction
+
+/*
     const categoryRepository = getRepository(Category)
 
 
@@ -59,6 +79,7 @@ class CreateTransactionService {
   }
 
     return
+    */
   }
 }
 
