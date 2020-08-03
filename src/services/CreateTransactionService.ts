@@ -1,4 +1,4 @@
-// import AppError from '../errors/AppError';
+ import AppError from '../errors/AppError';
 
 import Category from '../models/Category';
 import { getCustomRepository, FindOperator, FindOperatorType, getRepository } from 'typeorm'
@@ -18,68 +18,46 @@ class CreateTransactionService {
   public async execute({ title, value, type, category }:Request): Promise<Transaction> {
 
     const transactionRepository = getCustomRepository(TransactionsRepository)
+    const categoryRepository = getRepository(Category)
+
+    if(type !== 'outcome' && type !== 'income') {
+      throw new Error('The type should be income or outcome')
+    }
+
+    const { total } = await transactionRepository.getBalance()
+
+    if(type == 'outcome' && value > total) {
+      throw new AppError('The value is biggest than total')
+    }
 
 
-    //if(type !== 'outcome' && type !== 'income') {
-    //  throw new Error('The type should be income or outcome')
-    //}
+    let transactionCategory = await categoryRepository.findOne({
+      where: {title : category
+    },
+  })
+
+    if(!transactionCategory) {
+
+      transactionCategory = categoryRepository.create({
+        title: category,
+      })
+
+     await categoryRepository.save(transactionCategory)
+
+    }
 
 
     const transaction = transactionRepository.create({
       title,
       value,
       type,
+      category: transactionCategory
     })
 
     await transactionRepository.save(transaction)
 
     return transaction
 
-/*
-    const categoryRepository = getRepository(Category)
-
-
-    if(type !== 'outcome' && type !== 'income') {
-      throw new Error('The type should be income or outcome')
-    }
-
-    let findedCategory = await categoryRepository.findOne({
-      where: {title : category
-    },
-  })
-
-    if(findedCategory) {
-
-      const createdTransaction = transactionRepository.create({
-        title,
-        value,
-        type,
-        category_id: findedCategory.id
-      })
-
-      transactionRepository.save(createdTransaction)
-    } else {
-
-    const createdCategory = categoryRepository.create({
-      title,
-    })
-
-    categoryRepository.save(createdCategory)
-
-    const createdTransaction = transactionRepository.create({
-      title,
-      value,
-      type,
-      category_id: createdCategory.id
-    })
-
-    transactionRepository.save(createdTransaction)
-
-
-  }
-
-    return
-    */
   }
 }
 

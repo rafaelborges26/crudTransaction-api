@@ -21,10 +21,10 @@ class TransactionsRepository extends Repository<Transaction> {
           break
         case 'outcome':
           accumulator.outcome += Number(transaction.value)
-        break
+          break
 
         default:
-        break
+          break
 
       }
 
